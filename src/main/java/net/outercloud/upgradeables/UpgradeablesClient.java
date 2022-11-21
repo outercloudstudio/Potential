@@ -4,7 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.outercloud.upgradeables.Blocks.Screens.Client.WoodenHopperScreen;
+import net.outercloud.upgradeables.Hoppers.Wooden.WoodenHopperScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

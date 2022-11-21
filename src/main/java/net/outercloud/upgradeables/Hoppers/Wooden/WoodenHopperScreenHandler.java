@@ -1,4 +1,4 @@
-package net.outercloud.upgradeables.Blocks.Screens;
+package net.outercloud.upgradeables.Hoppers.Wooden;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

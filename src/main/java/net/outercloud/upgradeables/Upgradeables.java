@@ -12,9 +12,9 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.outercloud.upgradeables.Blocks.Entities.WoodenHopperEntity;
-import net.outercloud.upgradeables.Blocks.Screens.WoodenHopperScreenHandler;
-import net.outercloud.upgradeables.Blocks.WoodenHopper;
+import net.outercloud.upgradeables.Hoppers.Common.CommonHopperEntity;
+import net.outercloud.upgradeables.Hoppers.Wooden.WoodenHopperScreenHandler;
+import net.outercloud.upgradeables.Hoppers.Wooden.WoodenHopper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,10 +23,10 @@ public class Upgradeables implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("Upgradeables");
 
 	public static final WoodenHopper WOODEN_HOPPER = new WoodenHopper(FabricBlockSettings.of(Material.METAL).strength(4.0f));
-	public static final BlockEntityType<WoodenHopperEntity> WOODEN_HOPPER_ENTITY = Registry.register(
+	public static final BlockEntityType<CommonHopperEntity> COMMON_HOPPER_ENTITY = Registry.register(
 			Registry.BLOCK_ENTITY_TYPE,
-			new Identifier(ID, "wooden_hopper"),
-			FabricBlockEntityTypeBuilder.create(WoodenHopperEntity::new, WOODEN_HOPPER).build()
+			new Identifier(ID, "common_hopper_entity"),
+			FabricBlockEntityTypeBuilder.create(CommonHopperEntity::new, WOODEN_HOPPER).build()
 	);
 	public static final ScreenHandlerType<WoodenHopperScreenHandler> WOODEN_HOPPER_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(ID, "wooden_hopper"), WoodenHopperScreenHandler::new);
 

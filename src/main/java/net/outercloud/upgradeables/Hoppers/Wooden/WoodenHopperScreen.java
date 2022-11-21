@@ -1,4 +1,4 @@
-package net.outercloud.upgradeables.Blocks.Screens.Client;
+package net.outercloud.upgradeables.Hoppers.Wooden;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -9,7 +9,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.outercloud.upgradeables.Blocks.Screens.WoodenHopperScreenHandler;
 
 @Environment(EnvType.CLIENT)
 public class WoodenHopperScreen extends HandledScreen<WoodenHopperScreenHandler> {

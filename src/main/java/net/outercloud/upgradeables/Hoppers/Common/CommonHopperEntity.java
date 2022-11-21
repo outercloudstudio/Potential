@@ -1,4 +1,4 @@
-package net.outercloud.upgradeables.Blocks.Entities;
+package net.outercloud.upgradeables.Hoppers.Common;
 
 import java.util.Iterator;
 import java.util.List;
@@ -29,21 +29,37 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
-import net.outercloud.upgradeables.Blocks.Screens.WoodenHopperScreenHandler;
-import net.outercloud.upgradeables.Blocks.WoodenHopper;
+import net.outercloud.upgradeables.Hoppers.Stone.StoneHopper;
+import net.outercloud.upgradeables.Hoppers.Wooden.WoodenHopper;
+import net.outercloud.upgradeables.Hoppers.Wooden.WoodenHopperScreenHandler;
 import net.outercloud.upgradeables.Upgradeables;
 import org.jetbrains.annotations.Nullable;
 
-public class WoodenHopperEntity extends LootableContainerBlockEntity implements Hopper {
+public class CommonHopperEntity extends LootableContainerBlockEntity implements Hopper {
     private DefaultedList<ItemStack> inventory;
     private int transferCooldown;
-    private static final int cooldown = 64;
     private long lastTickTime;
 
-    public WoodenHopperEntity(BlockPos pos, BlockState state) {
-        super(Upgradeables.WOODEN_HOPPER_ENTITY, pos, state);
+    public CommonHopperEntity(BlockPos pos, BlockState state) {
+        super(Upgradeables.COMMON_HOPPER_ENTITY, pos, state);
         this.inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
         this.transferCooldown = -1;
+    }
+
+    public int getCooldown(){
+        BlockState state = world.getBlockState(pos);
+
+        if(state == null) return 0;
+
+        Block block = state.getBlock();
+
+        if(block instanceof WoodenHopper){
+            return 64;
+        }else if(block instanceof StoneHopper){
+            return 32;
+        }
+
+        return 0;
     }
 
     public void readNbt(NbtCompound nbt) {
@@ -87,7 +103,7 @@ public class WoodenHopperEntity extends LootableContainerBlockEntity implements 
         return Text.translatable("block.upgradeables.wooden_hopper");
     }
 
-    public static void serverTick(World world, BlockPos pos, BlockState state, WoodenHopperEntity blockEntity) {
+    public static void serverTick(World world, BlockPos pos, BlockState state, CommonHopperEntity blockEntity) {
         --blockEntity.transferCooldown;
         
         blockEntity.lastTickTime = world.getTime();
@@ -98,7 +114,7 @@ public class WoodenHopperEntity extends LootableContainerBlockEntity implements 
 
     }
 
-    private static boolean insertAndExtract(World world, BlockPos pos, BlockState state, WoodenHopperEntity blockEntity, BooleanSupplier booleanSupplier) {
+    private static boolean insertAndExtract(World world, BlockPos pos, BlockState state, CommonHopperEntity blockEntity, BooleanSupplier booleanSupplier) {
         if (!world.isClient) {
             if (!blockEntity.needsCooldown() && state.get(WoodenHopper.ENABLED)) {
                 boolean bl = false;
@@ -112,7 +128,7 @@ public class WoodenHopperEntity extends LootableContainerBlockEntity implements 
                 }
 
                 if (bl) {
-                    blockEntity.setTransferCooldown(cooldown);
+                    blockEntity.setTransferCooldown(blockEntity.getCooldown());
                     markDirty(world, pos, state);
                     return true;
                 }
@@ -278,17 +294,17 @@ public class WoodenHopperEntity extends LootableContainerBlockEntity implements 
             }
 
             if (bl) {
-                if (bl2 && to instanceof WoodenHopperEntity woodenHopperEntity) {
+                if (bl2 && to instanceof CommonHopperEntity woodenHopperEntity) {
                     if (!woodenHopperEntity.isDisabled()) {
                         int j = 0;
 
-                        if (from instanceof WoodenHopperEntity woodenHopperEntity2) {
+                        if (from instanceof CommonHopperEntity woodenHopperEntity2) {
                             if (woodenHopperEntity.lastTickTime >= woodenHopperEntity2.lastTickTime) {
                                 j = 1;
                             }
                         }
 
-                        woodenHopperEntity.setTransferCooldown(cooldown - j);
+                        woodenHopperEntity.setTransferCooldown(woodenHopperEntity.getCooldown() - j);
                     }
                 }
 
@@ -380,7 +396,7 @@ public class WoodenHopperEntity extends LootableContainerBlockEntity implements 
     }
 
     private boolean isDisabled() {
-        return this.transferCooldown > cooldown;
+        return this.transferCooldown > getCooldown();
     }
 
     protected DefaultedList<ItemStack> getInvStackList() {
@@ -391,7 +407,7 @@ public class WoodenHopperEntity extends LootableContainerBlockEntity implements 
         this.inventory = list;
     }
 
-    public static void onEntityCollided(World world, BlockPos pos, BlockState state, Entity entity, WoodenHopperEntity blockEntity) {
+    public static void onEntityCollided(World world, BlockPos pos, BlockState state, Entity entity, CommonHopperEntity blockEntity) {
         if (entity instanceof ItemEntity && VoxelShapes.matchesAnywhere(VoxelShapes.cuboid(entity.getBoundingBox().offset(-pos.getX(), -pos.getY(), -pos.getZ())), blockEntity.getInputAreaShape(), BooleanBiFunction.AND)) {
             insertAndExtract(world, pos, state, blockEntity, () -> extract(blockEntity, (ItemEntity)entity));
         }
