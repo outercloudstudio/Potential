@@ -6,7 +6,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.Hopper;
-import net.minecraft.block.entity.HopperBlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -111,8 +110,8 @@ public class WoodenHopper extends BlockWithEntity {
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         if (itemStack.hasCustomName()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof HopperBlockEntity) {
-                ((HopperBlockEntity)blockEntity).setCustomName(itemStack.getName());
+            if (blockEntity instanceof WoodenHopperEntity) {
+                ((WoodenHopperEntity)blockEntity).setCustomName(itemStack.getName());
             }
         }
     }
@@ -128,9 +127,10 @@ public class WoodenHopper extends BlockWithEntity {
             return ActionResult.SUCCESS;
         } else {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof HopperBlockEntity) {
-                player.openHandledScreen((HopperBlockEntity)blockEntity);
-                player.incrementStat(Stats.INSPECT_HOPPER);
+
+            if (blockEntity instanceof WoodenHopperEntity) {
+                Potential.LOGGER.info("Opening screen:");
+                player.openHandledScreen((WoodenHopperEntity)blockEntity);
             }
 
             return ActionResult.CONSUME;
@@ -151,8 +151,8 @@ public class WoodenHopper extends BlockWithEntity {
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof HopperBlockEntity) {
-                ItemScatterer.spawn(world, pos, (HopperBlockEntity)blockEntity);
+            if (blockEntity instanceof WoodenHopperEntity) {
+                ItemScatterer.spawn(world, pos, (WoodenHopperEntity)blockEntity);
                 world.updateComparators(pos, this);
             }
 
@@ -186,8 +186,8 @@ public class WoodenHopper extends BlockWithEntity {
 
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof HopperBlockEntity) {
-            HopperBlockEntity.onEntityCollided(world, pos, state, entity, (HopperBlockEntity)blockEntity);
+        if (blockEntity instanceof WoodenHopperEntity) {
+            WoodenHopperEntity.onEntityCollided(world, pos, state, entity, (WoodenHopperEntity) blockEntity);
         }
     }
 

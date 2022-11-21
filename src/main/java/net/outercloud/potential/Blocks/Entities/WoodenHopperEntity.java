@@ -30,6 +30,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
+import net.outercloud.potential.Blocks.Screens.WoodenHopperScreenHandler;
 import net.outercloud.potential.Blocks.WoodenHopper;
 import net.outercloud.potential.Potential;
 import org.jetbrains.annotations.Nullable;
@@ -398,7 +399,7 @@ public class WoodenHopperEntity extends LootableContainerBlockEntity implements 
     }
 
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new HopperScreenHandler(syncId, playerInventory, this);
+        return new WoodenHopperScreenHandler(syncId, playerInventory, this);
     }
 }
 
