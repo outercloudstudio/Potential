@@ -129,7 +129,6 @@ public class WoodenHopper extends BlockWithEntity {
             BlockEntity blockEntity = world.getBlockEntity(pos);
 
             if (blockEntity instanceof WoodenHopperEntity) {
-                Potential.LOGGER.info("Opening screen:");
                 player.openHandledScreen((WoodenHopperEntity)blockEntity);
             }
 

@@ -8,24 +8,26 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
+import net.outercloud.potential.Potential;
 
 public class WoodenHopperScreenHandler extends ScreenHandler {
-    public static final int SLOT_COUNT = 5;
     private final Inventory inventory;
 
     public WoodenHopperScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new SimpleInventory(5));
+        this(syncId, playerInventory, new SimpleInventory(1));
     }
 
     public WoodenHopperScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
-        super(ScreenHandlerType.HOPPER, syncId);
+        super(Potential.WOODEN_HOPPER_SCREEN_HANDLER, syncId);
         this.inventory = inventory;
-        checkSize(inventory, 5);
+        checkSize(inventory, 1);
         inventory.onOpen(playerInventory.player);
 
+        Potential.LOGGER.info("Opened Screen");
+
         int j;
-        for(j = 0; j < 5; ++j) {
-            this.addSlot(new Slot(inventory, j, 44 + j * 18, 20));
+        for(j = 0; j < 1; ++j) {
+            this.addSlot(new Slot(inventory, j, 80, 20));
         }
 
         for(j = 0; j < 3; ++j) {
@@ -37,7 +39,6 @@ public class WoodenHopperScreenHandler extends ScreenHandler {
         for(j = 0; j < 9; ++j) {
             this.addSlot(new Slot(playerInventory, j, 8 + j * 18, 109));
         }
-
     }
 
     public boolean canUse(PlayerEntity player) {
@@ -45,6 +46,8 @@ public class WoodenHopperScreenHandler extends ScreenHandler {
     }
 
     public ItemStack transferSlot(PlayerEntity player, int index) {
+        Potential.LOGGER.info("Transferring slot");
+
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
 
@@ -70,6 +73,8 @@ public class WoodenHopperScreenHandler extends ScreenHandler {
     }
 
     public void close(PlayerEntity player) {
+        Potential.LOGGER.info("Closed");
+
         super.close(player);
         this.inventory.onClose(player);
     }

@@ -20,7 +20,6 @@ import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.screen.HopperScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
@@ -38,11 +37,12 @@ import org.jetbrains.annotations.Nullable;
 public class WoodenHopperEntity extends LootableContainerBlockEntity implements Hopper {
     private DefaultedList<ItemStack> inventory;
     private int transferCooldown;
+    private static final int cooldown = 64;
     private long lastTickTime;
 
     public WoodenHopperEntity(BlockPos pos, BlockState state) {
         super(Potential.WOODEN_HOPPER_ENTITY, pos, state);
-        this.inventory = DefaultedList.ofSize(5, ItemStack.EMPTY);
+        this.inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
         this.transferCooldown = -1;
     }
 
@@ -75,7 +75,7 @@ public class WoodenHopperEntity extends LootableContainerBlockEntity implements 
     }
 
     public void setStack(int slot, ItemStack stack) {
-        this.checkLootInteraction((PlayerEntity)null);
+        this.checkLootInteraction(null);
         this.getInvStackList().set(slot, stack);
         if (stack.getCount() > this.getMaxCountPerStack()) {
             stack.setCount(this.getMaxCountPerStack());
@@ -84,11 +84,12 @@ public class WoodenHopperEntity extends LootableContainerBlockEntity implements 
     }
 
     protected Text getContainerName() {
-        return Text.translatable("container.wooden_hopper");
+        return Text.translatable("block.potential.wooden_hopper");
     }
 
     public static void serverTick(World world, BlockPos pos, BlockState state, WoodenHopperEntity blockEntity) {
         --blockEntity.transferCooldown;
+        
         blockEntity.lastTickTime = world.getTime();
         if (!blockEntity.needsCooldown()) {
             blockEntity.setTransferCooldown(0);
@@ -111,7 +112,7 @@ public class WoodenHopperEntity extends LootableContainerBlockEntity implements 
                 }
 
                 if (bl) {
-                    blockEntity.setTransferCooldown(8);
+                    blockEntity.setTransferCooldown(cooldown);
                     markDirty(world, pos, state);
                     return true;
                 }
@@ -280,13 +281,14 @@ public class WoodenHopperEntity extends LootableContainerBlockEntity implements 
                 if (bl2 && to instanceof WoodenHopperEntity woodenHopperEntity) {
                     if (!woodenHopperEntity.isDisabled()) {
                         int j = 0;
+
                         if (from instanceof WoodenHopperEntity woodenHopperEntity2) {
                             if (woodenHopperEntity.lastTickTime >= woodenHopperEntity2.lastTickTime) {
                                 j = 1;
                             }
                         }
 
-                        woodenHopperEntity.setTransferCooldown(8 - j);
+                        woodenHopperEntity.setTransferCooldown(cooldown - j);
                     }
                 }
 
@@ -308,10 +310,8 @@ public class WoodenHopperEntity extends LootableContainerBlockEntity implements 
         return getInventoryAt(world, hopper.getHopperX(), hopper.getHopperY() + 1.0D, hopper.getHopperZ());
     }
 
-    public static List<ItemEntity> getInputItemEntities(World world, Hopper hopper) {
-        return (List)hopper.getInputAreaShape().getBoundingBoxes().stream().flatMap((box) -> {
-            return world.getEntitiesByClass(ItemEntity.class, box.offset(hopper.getHopperX() - 0.5D, hopper.getHopperY() - 0.5D, hopper.getHopperZ() - 0.5D), EntityPredicates.VALID_ENTITY).stream();
-        }).collect(Collectors.toList());
+    public static List getInputItemEntities(World world, Hopper hopper) {
+        return hopper.getInputAreaShape().getBoundingBoxes().stream().flatMap((box) -> world.getEntitiesByClass(ItemEntity.class, box.offset(hopper.getHopperX() - 0.5D, hopper.getHopperY() - 0.5D, hopper.getHopperZ() - 0.5D), EntityPredicates.VALID_ENTITY).stream()).collect(Collectors.toList());
     }
 
     @Nullable
@@ -338,13 +338,13 @@ public class WoodenHopperEntity extends LootableContainerBlockEntity implements 
         }
 
         if (inventory == null) {
-            List<Entity> list = world.getOtherEntities((Entity)null, new Box(x - 0.5D, y - 0.5D, z - 0.5D, x + 0.5D, y + 0.5D, z + 0.5D), EntityPredicates.VALID_INVENTORIES);
+            List<Entity> list = world.getOtherEntities(null, new Box(x - 0.5D, y - 0.5D, z - 0.5D, x + 0.5D, y + 0.5D, z + 0.5D), EntityPredicates.VALID_INVENTORIES);
             if (!list.isEmpty()) {
                 inventory = (Inventory)list.get(world.random.nextInt(list.size()));
             }
         }
 
-        return (Inventory)inventory;
+        return inventory;
     }
 
     private static boolean canMergeItems(ItemStack first, ItemStack second) {
@@ -380,7 +380,7 @@ public class WoodenHopperEntity extends LootableContainerBlockEntity implements 
     }
 
     private boolean isDisabled() {
-        return this.transferCooldown > 8;
+        return this.transferCooldown > cooldown;
     }
 
     protected DefaultedList<ItemStack> getInvStackList() {

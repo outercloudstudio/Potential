@@ -13,7 +13,7 @@ import net.outercloud.potential.Blocks.Screens.WoodenHopperScreenHandler;
 
 @Environment(EnvType.CLIENT)
 public class WoodenHopperScreen extends HandledScreen<WoodenHopperScreenHandler> {
-    private static final Identifier TEXTURE = new Identifier("textures/gui/container/hopper.png");
+    private static final Identifier TEXTURE = new Identifier("potential:textures/gui/container/wooden_hopper.png");
 
     public WoodenHopperScreen(WoodenHopperScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
