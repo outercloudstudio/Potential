@@ -1,4 +1,4 @@
-package net.outercloud.potential.Blocks.Entities;
+package net.outercloud.upgradeables.Blocks.Entities;
 
 import java.util.Iterator;
 import java.util.List;
@@ -29,9 +29,9 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
-import net.outercloud.potential.Blocks.Screens.WoodenHopperScreenHandler;
-import net.outercloud.potential.Blocks.WoodenHopper;
-import net.outercloud.potential.Potential;
+import net.outercloud.upgradeables.Blocks.Screens.WoodenHopperScreenHandler;
+import net.outercloud.upgradeables.Blocks.WoodenHopper;
+import net.outercloud.upgradeables.Upgradeables;
 import org.jetbrains.annotations.Nullable;
 
 public class WoodenHopperEntity extends LootableContainerBlockEntity implements Hopper {
@@ -41,7 +41,7 @@ public class WoodenHopperEntity extends LootableContainerBlockEntity implements 
     private long lastTickTime;
 
     public WoodenHopperEntity(BlockPos pos, BlockState state) {
-        super(Potential.WOODEN_HOPPER_ENTITY, pos, state);
+        super(Upgradeables.WOODEN_HOPPER_ENTITY, pos, state);
         this.inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
         this.transferCooldown = -1;
     }
@@ -84,7 +84,7 @@ public class WoodenHopperEntity extends LootableContainerBlockEntity implements 
     }
 
     protected Text getContainerName() {
-        return Text.translatable("block.potential.wooden_hopper");
+        return Text.translatable("block.upgradeables.wooden_hopper");
     }
 
     public static void serverTick(World world, BlockPos pos, BlockState state, WoodenHopperEntity blockEntity) {

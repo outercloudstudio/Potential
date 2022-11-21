@@ -1,10 +1,10 @@
 {
     "ambientocclusion": false,
     "textures": {
-        "particle": "potential:block/wooden_hopper_outside",
-        "top": "potential:block/wooden_hopper_top",
-        "side": "potential:block/wooden_hopper_outside",
-        "inside": "potential:block/wooden_hopper_inside"
+        "particle": "upgradeables:block/wooden_hopper_outside",
+        "top": "upgradeables:block/wooden_hopper_top",
+        "side": "upgradeables:block/wooden_hopper_outside",
+        "inside": "upgradeables:block/wooden_hopper_inside"
     },
     "elements": [
         {   "from": [ 0, 10, 0 ],

@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "potential",
+  "id": "upgradeables",
   "version": "1.0.0",
 
-  "name": "Potential",
-  "description": "A mod that adds simple automation additions.",
+  "name": "Upgradeables",
+  "description": "A mod that adds new tiers of utilities",
   "authors": [
     "Outer Cloud"
   ],
@@ -14,15 +14,15 @@
   },
 
   "license": "MIT",
-  "icon": "assets/potential/icon.png",
+  "icon": "assets/upgradeables/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.outercloud.potential.Potential"
+      "net.outercloud.upgradeables.Upgradeables"
     ],
     "client": [
-      "net.outercloud.potential.PotentialClient"
+      "net.outercloud.upgradeables.UpgradeablesClient"
     ]
   },
 

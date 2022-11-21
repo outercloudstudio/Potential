@@ -1,7 +1,6 @@
-package net.outercloud.potential.Blocks;
+package net.outercloud.upgradeables.Blocks;
 
 import net.minecraft.block.*;
-import net.minecraft.block.AbstractBlock.Settings;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -13,12 +12,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.stat.Stats;
 import net.minecraft.state.StateManager.Builder;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -33,9 +30,8 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.outercloud.potential.Blocks.Entities.WoodenHopperEntity;
-import net.outercloud.potential.Potential;
-import org.jetbrains.annotations.Nullable;
+import net.outercloud.upgradeables.Blocks.Entities.WoodenHopperEntity;
+import net.outercloud.upgradeables.Upgradeables;
 
 public class WoodenHopper extends BlockWithEntity {
     public static final DirectionProperty FACING = Properties.HOPPER_FACING;
@@ -104,7 +100,7 @@ public class WoodenHopper extends BlockWithEntity {
     }
 
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, Potential.WOODEN_HOPPER_ENTITY, WoodenHopperEntity::serverTick);
+        return checkType(type, Upgradeables.WOODEN_HOPPER_ENTITY, WoodenHopperEntity::serverTick);
     }
 
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {

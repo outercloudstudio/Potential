@@ -1,4 +1,4 @@
-package net.outercloud.potential.Blocks.Screens;
+package net.outercloud.upgradeables.Blocks.Screens;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -6,9 +6,8 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
-import net.outercloud.potential.Potential;
+import net.outercloud.upgradeables.Upgradeables;
 
 public class WoodenHopperScreenHandler extends ScreenHandler {
     private final Inventory inventory;
@@ -18,12 +17,12 @@ public class WoodenHopperScreenHandler extends ScreenHandler {
     }
 
     public WoodenHopperScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
-        super(Potential.WOODEN_HOPPER_SCREEN_HANDLER, syncId);
+        super(Upgradeables.WOODEN_HOPPER_SCREEN_HANDLER, syncId);
         this.inventory = inventory;
         checkSize(inventory, 1);
         inventory.onOpen(playerInventory.player);
 
-        Potential.LOGGER.info("Opened Screen");
+        Upgradeables.LOGGER.info("Opened Screen");
 
         int j;
         for(j = 0; j < 1; ++j) {
@@ -46,7 +45,7 @@ public class WoodenHopperScreenHandler extends ScreenHandler {
     }
 
     public ItemStack transferSlot(PlayerEntity player, int index) {
-        Potential.LOGGER.info("Transferring slot");
+        Upgradeables.LOGGER.info("Transferring slot");
 
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
@@ -73,7 +72,7 @@ public class WoodenHopperScreenHandler extends ScreenHandler {
     }
 
     public void close(PlayerEntity player) {
-        Potential.LOGGER.info("Closed");
+        Upgradeables.LOGGER.info("Closed");
 
         super.close(player);
         this.inventory.onClose(player);

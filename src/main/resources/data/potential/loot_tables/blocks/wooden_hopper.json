@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "potential:wooden_hopper"
+          "name": "upgradeables:wooden_hopper"
         }
       ],
       "conditions": [

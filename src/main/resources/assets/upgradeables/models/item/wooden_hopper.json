@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "potential:item/wooden_hopper"
+    "layer0": "upgradeables:item/wooden_hopper"
   }
 }
