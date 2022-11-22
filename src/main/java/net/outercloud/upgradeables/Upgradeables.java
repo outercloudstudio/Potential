@@ -14,6 +14,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.outercloud.upgradeables.Hoppers.AbstractHopperEntity;
 import net.outercloud.upgradeables.Hoppers.AbstractHopperScreenHandler;
+import net.outercloud.upgradeables.Hoppers.Gold.GoldHopper;
+import net.outercloud.upgradeables.Hoppers.Gold.GoldHopperEntity;
+import net.outercloud.upgradeables.Hoppers.Gold.GoldHopperScreenHandler;
 import net.outercloud.upgradeables.Hoppers.Stone.StoneHopper;
 import net.outercloud.upgradeables.Hoppers.Stone.StoneHopperEntity;
 import net.outercloud.upgradeables.Hoppers.Stone.StoneHopperScreenHandler;
@@ -41,11 +44,23 @@ public class Upgradeables implements ModInitializer {
 	);
 	public static final ScreenHandlerType<StoneHopperScreenHandler> STONE_HOPPER_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(ID, "stone_hopper"), StoneHopperScreenHandler::new);
 
+	public static final GoldHopper GOLD_HOPPER = new GoldHopper(FabricBlockSettings.of(Material.METAL).strength(4.0f));
+	public static final BlockEntityType<GoldHopperEntity> GOLD_HOPPER_ENTITY = Registry.register(
+			Registry.BLOCK_ENTITY_TYPE,
+			new Identifier(ID, "gold_hopper"),
+			FabricBlockEntityTypeBuilder.create(GoldHopperEntity::new, GOLD_HOPPER).build()
+	);
+	public static final ScreenHandlerType<GoldHopperScreenHandler> GOLD_HOPPER_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(ID, "gold_hopper"), GoldHopperScreenHandler::new);
+
 	@Override
 	public void onInitialize() {
 		Registry.register(Registry.BLOCK, new Identifier(ID, "wooden_hopper"), WOODEN_HOPPER);
 		Registry.register(Registry.ITEM, new Identifier(ID, "wooden_hopper"), new BlockItem(WOODEN_HOPPER, new FabricItemSettings().group(ItemGroup.REDSTONE)));
+
 		Registry.register(Registry.BLOCK, new Identifier(ID, "stone_hopper"), STONE_HOPPER);
 		Registry.register(Registry.ITEM, new Identifier(ID, "stone_hopper"), new BlockItem(STONE_HOPPER, new FabricItemSettings().group(ItemGroup.REDSTONE)));
+
+		Registry.register(Registry.BLOCK, new Identifier(ID, "gold_hopper"), GOLD_HOPPER);
+		Registry.register(Registry.ITEM, new Identifier(ID, "gold_hopper"), new BlockItem(GOLD_HOPPER, new FabricItemSettings().group(ItemGroup.REDSTONE)));
 	}
 }
