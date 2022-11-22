@@ -26,7 +26,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.outercloud.upgradeables.Hoppers.Common.CommonHopperEntity;
 import net.outercloud.upgradeables.Upgradeables;
 
 public class StoneHopper extends BlockWithEntity {
@@ -92,18 +91,18 @@ public class StoneHopper extends BlockWithEntity {
     }
 
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new CommonHopperEntity(pos, state);
+        return new StoneHopperEntity(pos, state);
     }
 
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, Upgradeables.COMMON_HOPPER_ENTITY, CommonHopperEntity::serverTick);
+        return checkType(type, Upgradeables.STONE_HOPPER_ENTITY, StoneHopperEntity::serverTick);
     }
 
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         if (itemStack.hasCustomName()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof CommonHopperEntity) {
-                ((CommonHopperEntity)blockEntity).setCustomName(itemStack.getName());
+            if (blockEntity instanceof StoneHopperEntity) {
+                ((StoneHopperEntity)blockEntity).setCustomName(itemStack.getName());
             }
         }
     }
@@ -120,8 +119,8 @@ public class StoneHopper extends BlockWithEntity {
         } else {
             BlockEntity blockEntity = world.getBlockEntity(pos);
 
-            if (blockEntity instanceof CommonHopperEntity) {
-                player.openHandledScreen((CommonHopperEntity)blockEntity);
+            if (blockEntity instanceof StoneHopperEntity) {
+                player.openHandledScreen((StoneHopperEntity)blockEntity);
             }
 
             return ActionResult.CONSUME;
@@ -142,8 +141,8 @@ public class StoneHopper extends BlockWithEntity {
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof CommonHopperEntity) {
-                ItemScatterer.spawn(world, pos, (CommonHopperEntity)blockEntity);
+            if (blockEntity instanceof StoneHopperEntity) {
+                ItemScatterer.spawn(world, pos, (StoneHopperEntity)blockEntity);
                 world.updateComparators(pos, this);
             }
 
@@ -177,8 +176,8 @@ public class StoneHopper extends BlockWithEntity {
 
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CommonHopperEntity) {
-            CommonHopperEntity.onEntityCollided(world, pos, state, entity, (CommonHopperEntity) blockEntity);
+        if (blockEntity instanceof StoneHopperEntity) {
+            StoneHopperEntity.onEntityCollided(world, pos, state, entity, (StoneHopperEntity) blockEntity);
         }
     }
 

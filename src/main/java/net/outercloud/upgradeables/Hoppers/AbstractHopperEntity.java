@@ -1,4 +1,4 @@
-package net.outercloud.upgradeables.Hoppers.Common;
+package net.outercloud.upgradeables.Hoppers;
 
 import java.util.Iterator;
 import java.util.List;
@@ -12,18 +12,14 @@ import net.minecraft.block.InventoryProvider;
 import net.minecraft.block.entity.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
@@ -37,144 +33,56 @@ import net.outercloud.upgradeables.Hoppers.Wooden.WoodenHopper;
 import net.outercloud.upgradeables.Upgradeables;
 import org.jetbrains.annotations.Nullable;
 
-public class CommonHopperEntity extends LootableContainerBlockEntity implements Hopper {
-    public DefaultedList<ItemStack> inventory;
+public class AbstractHopperEntity extends LootableContainerBlockEntity implements Hopper {
+    private DefaultedList<ItemStack> inventory;
 
     private int transferCooldown;
 
     private long lastTickTime;
 
-    private HopperType hopperType = HopperType.WOODEN;
-
-    public boolean updatedHopperType = false;
-
-    private PropertyDelegate screenPropertyDelegate;
-
-    public CommonHopperEntity(BlockPos pos, BlockState state) {
-        super(Upgradeables.COMMON_HOPPER_ENTITY, pos, state);
-
-        this.inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
-
-        this.transferCooldown = -1;
-
-        screenPropertyDelegate = new PropertyDelegate() {
-            public int get(int index) {
-                switch(index) {
-                    case 0:
-                        return hopperType.ordinal();
-                }
-
-                return 0;
-            }
-
-            public void set(int index, int value) {
-                switch(index) {
-                    case 0:
-                        hopperType = HopperType.values()[value];
-                        break;
-                }
-
-            }
-
-            public int size() {
-                return 1;
-            }
-        };
-    }
-
-    public enum HopperType {
-        WOODEN,
-        STONE,
-        GOLD,
-        DIAMOND,
-        COPPER
-    }
-
-    public HopperType getHopperType(){
-        BlockState state = world.getBlockState(pos);
-
-        Upgradeables.LOGGER.info("Client: " + world.isClient);
-        Upgradeables.LOGGER.info("State: " + state);
-
-        if(state == null) return HopperType.WOODEN;
-
-        if(state.isOf(Upgradeables.WOODEN_HOPPER)){
-            return HopperType.WOODEN;
-        }else if(state.isOf(Upgradeables.STONE_HOPPER)){
-            return HopperType.STONE;
-        }
-
-        Upgradeables.LOGGER.info("Unkown State!");
-
-        return HopperType.WOODEN;
+    public int getInventorySize(){
+        return 1;
     }
 
     public int getCooldown(){
-        switch (hopperType){
-            case STONE -> {
-                return 32;
-            }
-            default -> {
-                return 64;
-            }
-        }
+        return 64;
     }
 
-    public void updateInventorySize(HopperType hopperType){
-        Upgradeables.LOGGER.info("Updating inventory size for " + hopperType);
+    public Text getContainerName() {
+        return Text.translatable("block.upgradeables.wooden_hopper");
+    }
 
-        switch (hopperType){
-            case STONE -> {
-                inventory = DefaultedList.ofSize(3, ItemStack.EMPTY);
-            }
-            default -> {
-                inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
-            }
-        }
+    public ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
+        return new AbstractHopperScreenHandler(syncId, playerInventory, this);
+    }
+
+    public AbstractHopperEntity(BlockPos pos, BlockState state) {
+        this(pos, state, Upgradeables.WOODEN_HOPPER_ENTITY);
+    }
+
+    public AbstractHopperEntity(BlockPos pos, BlockState state, BlockEntityType blockEntityType) {
+        super(blockEntityType, pos, state);
+
+        this.inventory = DefaultedList.ofSize(getInventorySize(), ItemStack.EMPTY);
+
+        this.transferCooldown = -1;
     }
 
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-
-        HopperType readHopperType = HopperType.values()[nbt.getInt("HopperType")];
-
-        if(readHopperType != hopperType){
-            Upgradeables.LOGGER.info("Got new hopper type! " + readHopperType);
-
-            updateInventorySize(readHopperType);
-
-            Upgradeables.LOGGER.info("new inventory " + inventory.size());
+        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
+        if (!this.deserializeLootTable(nbt)) {
+            Inventories.readNbt(nbt, this.inventory);
         }
-
-        hopperType = readHopperType;
-
-        if (!deserializeLootTable(nbt)) {
-            Inventories.readNbt(nbt, inventory);
-        }
-
-        transferCooldown = nbt.getInt("TransferCooldown");
+        this.transferCooldown = nbt.getInt("TransferCooldown");
     }
 
     protected void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-
-        if (!serializeLootTable(nbt)) {
-            Inventories.writeNbt(nbt, inventory);
+        if (!this.serializeLootTable(nbt)) {
+            Inventories.writeNbt(nbt, this.inventory);
         }
-
-        nbt.putInt("TransferCooldown", transferCooldown);
-
-        nbt.putInt("HopperType", hopperType.ordinal());
-    }
-
-    @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
-    }
-
-    @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
+        nbt.putInt("TransferCooldown", this.transferCooldown);
     }
 
     public int size() {
@@ -182,7 +90,7 @@ public class CommonHopperEntity extends LootableContainerBlockEntity implements 
     }
 
     public ItemStack removeStack(int slot, int amount) {
-        this.checkLootInteraction((PlayerEntity)null);
+        this.checkLootInteraction(null);
         return Inventories.splitStack(this.getInvStackList(), slot, amount);
     }
 
@@ -195,31 +103,10 @@ public class CommonHopperEntity extends LootableContainerBlockEntity implements 
 
     }
 
-    protected Text getContainerName() {
-        switch (hopperType){
-            case STONE -> {
-                return Text.translatable("block.upgradeables.stone_hopper");
-            }
-            default -> {
-                return Text.translatable("block.upgradeables.wooden_hopper");
-            }
-        }
-    }
-
-    public static void serverTick(World world, BlockPos pos, BlockState state, CommonHopperEntity blockEntity) {
-        if(!blockEntity.updatedHopperType && !world.isClient) {
-            Upgradeables.LOGGER.info("Updating hopper entity!");
-
-            blockEntity.hopperType = blockEntity.getHopperType();
-
-            blockEntity.updateInventorySize(blockEntity.hopperType);
-
-            blockEntity.updatedHopperType = true;
-
-            world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
-        }
-
+    public static void serverTick(World world, BlockPos pos, BlockState state, AbstractHopperEntity blockEntity) {
         --blockEntity.transferCooldown;
+
+//        Upgradeables.LOGGER.info("Tick!");
         
         blockEntity.lastTickTime = world.getTime();
         if (!blockEntity.needsCooldown()) {
@@ -229,7 +116,7 @@ public class CommonHopperEntity extends LootableContainerBlockEntity implements 
 
     }
 
-    private static boolean insertAndExtract(World world, BlockPos pos, BlockState state, CommonHopperEntity blockEntity, BooleanSupplier booleanSupplier) {
+    private static boolean insertAndExtract(World world, BlockPos pos, BlockState state, AbstractHopperEntity blockEntity, BooleanSupplier booleanSupplier) {
         if (!world.isClient) {
             if (!blockEntity.needsCooldown() && state.get(WoodenHopper.ENABLED)) {
                 boolean bl = false;
@@ -409,11 +296,11 @@ public class CommonHopperEntity extends LootableContainerBlockEntity implements 
             }
 
             if (bl) {
-                if (bl2 && to instanceof CommonHopperEntity woodenHopperEntity) {
+                if (bl2 && to instanceof AbstractHopperEntity woodenHopperEntity) {
                     if (!woodenHopperEntity.isDisabled()) {
                         int j = 0;
 
-                        if (from instanceof CommonHopperEntity woodenHopperEntity2) {
+                        if (from instanceof AbstractHopperEntity woodenHopperEntity2) {
                             if (woodenHopperEntity.lastTickTime >= woodenHopperEntity2.lastTickTime) {
                                 j = 1;
                             }
@@ -522,19 +409,11 @@ public class CommonHopperEntity extends LootableContainerBlockEntity implements 
         this.inventory = list;
     }
 
-    public static void onEntityCollided(World world, BlockPos pos, BlockState state, Entity entity, CommonHopperEntity blockEntity) {
+    public static void onEntityCollided(World world, BlockPos pos, BlockState state, Entity entity, AbstractHopperEntity blockEntity) {
         if (entity instanceof ItemEntity && VoxelShapes.matchesAnywhere(VoxelShapes.cuboid(entity.getBoundingBox().offset(-pos.getX(), -pos.getY(), -pos.getZ())), blockEntity.getInputAreaShape(), BooleanBiFunction.AND)) {
             insertAndExtract(world, pos, state, blockEntity, () -> extract(blockEntity, (ItemEntity)entity));
         }
 
-    }
-
-    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        Upgradeables.LOGGER.info(String.valueOf(hopperType));
-        Upgradeables.LOGGER.info(String.valueOf(inventory.size()));
-        Upgradeables.LOGGER.info(String.valueOf(world.isClient()));
-
-        return new CommonHopperScreenHandler(syncId, playerInventory, this, screenPropertyDelegate, false);
     }
 }
 

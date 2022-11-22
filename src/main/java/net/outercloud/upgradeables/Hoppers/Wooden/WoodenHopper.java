@@ -30,7 +30,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.outercloud.upgradeables.Hoppers.Common.CommonHopperEntity;
+import net.outercloud.upgradeables.Hoppers.AbstractHopperEntity;
 import net.outercloud.upgradeables.Upgradeables;
 
 public class WoodenHopper extends BlockWithEntity {
@@ -96,18 +96,18 @@ public class WoodenHopper extends BlockWithEntity {
     }
 
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new CommonHopperEntity(pos, state);
+        return new AbstractHopperEntity(pos, state);
     }
 
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, Upgradeables.COMMON_HOPPER_ENTITY, CommonHopperEntity::serverTick);
+        return checkType(type, Upgradeables.WOODEN_HOPPER_ENTITY, AbstractHopperEntity::serverTick);
     }
 
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         if (itemStack.hasCustomName()) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof CommonHopperEntity) {
-                ((CommonHopperEntity)blockEntity).setCustomName(itemStack.getName());
+            if (blockEntity instanceof AbstractHopperEntity) {
+                ((AbstractHopperEntity)blockEntity).setCustomName(itemStack.getName());
             }
         }
     }
@@ -124,8 +124,8 @@ public class WoodenHopper extends BlockWithEntity {
         } else {
             BlockEntity blockEntity = world.getBlockEntity(pos);
 
-            if (blockEntity instanceof CommonHopperEntity) {
-                player.openHandledScreen((CommonHopperEntity)blockEntity);
+            if (blockEntity instanceof AbstractHopperEntity) {
+                player.openHandledScreen((AbstractHopperEntity)blockEntity);
             }
 
             return ActionResult.CONSUME;
@@ -146,8 +146,8 @@ public class WoodenHopper extends BlockWithEntity {
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!state.isOf(newState.getBlock())) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof CommonHopperEntity) {
-                ItemScatterer.spawn(world, pos, (CommonHopperEntity)blockEntity);
+            if (blockEntity instanceof AbstractHopperEntity) {
+                ItemScatterer.spawn(world, pos, (AbstractHopperEntity)blockEntity);
                 world.updateComparators(pos, this);
             }
 
@@ -181,8 +181,8 @@ public class WoodenHopper extends BlockWithEntity {
 
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof CommonHopperEntity) {
-            CommonHopperEntity.onEntityCollided(world, pos, state, entity, (CommonHopperEntity) blockEntity);
+        if (blockEntity instanceof AbstractHopperEntity) {
+            AbstractHopperEntity.onEntityCollided(world, pos, state, entity, (AbstractHopperEntity) blockEntity);
         }
     }
 

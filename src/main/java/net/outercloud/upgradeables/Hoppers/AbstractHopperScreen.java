@@ -1,4 +1,4 @@
-package net.outercloud.upgradeables.Hoppers.Common;
+package net.outercloud.upgradeables.Hoppers;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -9,21 +9,23 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.outercloud.upgradeables.Hoppers.Common.CommonHopperScreenHandler;
-import net.outercloud.upgradeables.Upgradeables;
-import net.outercloud.upgradeables.UpgradeablesClient;
 
 @Environment(EnvType.CLIENT)
-public class CommonHopperScreen extends HandledScreen<CommonHopperScreenHandler> {
-    private static final Identifier WOODEN_TEXTURE = new Identifier("upgradeables:textures/gui/container/wooden_hopper.png");
-    private static final Identifier STONE_TEXTURE = new Identifier("upgradeables:textures/gui/container/stone_hopper.png");
+public class AbstractHopperScreen extends HandledScreen<AbstractHopperScreenHandler> {
+    private Identifier texture;
 
-    public CommonHopperScreen(CommonHopperScreenHandler handler, PlayerInventory inventory, Text title) {
+    public Identifier getTexture(){
+        return new Identifier("upgradeables:textures/gui/container/wooden_hopper.png");
+    }
+
+    public AbstractHopperScreen(AbstractHopperScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
 
         this.passEvents = false;
         this.backgroundHeight = 133;
         this.playerInventoryTitleY = this.backgroundHeight - 94;
+
+        this.texture = getTexture();
     }
 
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -36,14 +38,7 @@ public class CommonHopperScreen extends HandledScreen<CommonHopperScreenHandler>
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        switch (handler.hopperType){
-            case STONE -> {
-                RenderSystem.setShaderTexture(0, STONE_TEXTURE);
-            }
-            default -> {
-                RenderSystem.setShaderTexture(0, WOODEN_TEXTURE);
-            }
-        }
+        RenderSystem.setShaderTexture(0, texture);
 
         int i = (this.width - this.backgroundWidth) / 2;
         int j = (this.height - this.backgroundHeight) / 2;

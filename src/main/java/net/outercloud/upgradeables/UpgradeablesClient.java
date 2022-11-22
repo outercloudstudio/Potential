@@ -4,7 +4,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.outercloud.upgradeables.Hoppers.Common.CommonHopperScreen;
+import net.outercloud.upgradeables.Hoppers.AbstractHopperScreen;
+import net.outercloud.upgradeables.Hoppers.Stone.StoneHopperScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,7 @@ public class UpgradeablesClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		HandledScreens.register(Upgradeables.COMMON_HOPPER_SCREEN_HANDLER, CommonHopperScreen::new);
+		HandledScreens.register(Upgradeables.WOODEN_HOPPER_SCREEN_HANDLER, AbstractHopperScreen::new);
+		HandledScreens.register(Upgradeables.STONE_HOPPER_SCREEN_HANDLER, StoneHopperScreen::new);
 	}
 }
