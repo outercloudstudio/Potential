@@ -9,14 +9,14 @@ import net.outercloud.upgradeables.Hoppers.AbstractHopperScreenHandler;
 import net.outercloud.upgradeables.Upgradeables;
 
 public class GoldHopperScreenHandler extends AbstractHopperScreenHandler {
-    public static final ScreenHandlerType<?> screenHandlerType = Upgradeables.STONE_HOPPER_SCREEN_HANDLER;
+    public static final ScreenHandlerType<?> screenHandlerType = Upgradeables.GOLD_HOPPER_SCREEN_HANDLER;
 
     public GoldHopperScreenHandler(int syncId, PlayerInventory playerInventory) {
-        super(syncId, playerInventory, new SimpleInventory(3), Upgradeables.STONE_HOPPER_SCREEN_HANDLER);
+        super(syncId, playerInventory, new SimpleInventory(3), Upgradeables.GOLD_HOPPER_SCREEN_HANDLER);
     }
 
     public GoldHopperScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
-        super(syncId, playerInventory, inventory, Upgradeables.STONE_HOPPER_SCREEN_HANDLER);
+        super(syncId, playerInventory, inventory, Upgradeables.GOLD_HOPPER_SCREEN_HANDLER);
     }
 
     @Override
