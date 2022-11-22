@@ -14,6 +14,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.outercloud.upgradeables.Hoppers.AbstractHopperEntity;
 import net.outercloud.upgradeables.Hoppers.AbstractHopperScreenHandler;
+import net.outercloud.upgradeables.Hoppers.Diamond.DiamondHopper;
+import net.outercloud.upgradeables.Hoppers.Diamond.DiamondHopperEntity;
+import net.outercloud.upgradeables.Hoppers.Diamond.DiamondHopperScreenHandler;
 import net.outercloud.upgradeables.Hoppers.Gold.GoldHopper;
 import net.outercloud.upgradeables.Hoppers.Gold.GoldHopperEntity;
 import net.outercloud.upgradeables.Hoppers.Gold.GoldHopperScreenHandler;
@@ -52,6 +55,14 @@ public class Upgradeables implements ModInitializer {
 	);
 	public static final ScreenHandlerType<GoldHopperScreenHandler> GOLD_HOPPER_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(ID, "gold_hopper"), GoldHopperScreenHandler::new);
 
+	public static final DiamondHopper DIAMOND_HOPPER = new DiamondHopper(FabricBlockSettings.of(Material.METAL).strength(4.0f));
+	public static final BlockEntityType<DiamondHopperEntity> DIAMOND_HOPPER_ENTITY = Registry.register(
+			Registry.BLOCK_ENTITY_TYPE,
+			new Identifier(ID, "diamond_hopper"),
+			FabricBlockEntityTypeBuilder.create(DiamondHopperEntity::new, DIAMOND_HOPPER).build()
+	);
+	public static final ScreenHandlerType<DiamondHopperScreenHandler> DIAMOND_HOPPER_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(ID, "diamond_hopper"), DiamondHopperScreenHandler::new);
+
 	@Override
 	public void onInitialize() {
 		Registry.register(Registry.BLOCK, new Identifier(ID, "wooden_hopper"), WOODEN_HOPPER);
@@ -62,5 +73,8 @@ public class Upgradeables implements ModInitializer {
 
 		Registry.register(Registry.BLOCK, new Identifier(ID, "gold_hopper"), GOLD_HOPPER);
 		Registry.register(Registry.ITEM, new Identifier(ID, "gold_hopper"), new BlockItem(GOLD_HOPPER, new FabricItemSettings().group(ItemGroup.REDSTONE)));
+
+		Registry.register(Registry.BLOCK, new Identifier(ID, "diamond_hopper"), DIAMOND_HOPPER);
+		Registry.register(Registry.ITEM, new Identifier(ID, "diamond_hopper"), new BlockItem(DIAMOND_HOPPER, new FabricItemSettings().group(ItemGroup.REDSTONE)));
 	}
 }

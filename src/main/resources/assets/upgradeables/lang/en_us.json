@@ -1,5 +1,6 @@
 {
   "block.upgradeables.wooden_hopper": "Wooden Hopper",
   "block.upgradeables.stone_hopper": "Stone Hopper",
-  "block.upgradeables.gold_hopper": "Golden Hopper"
+  "block.upgradeables.gold_hopper": "Golden Hopper",
+  "block.upgradeables.diamond_hopper": "Diamond Hopper"
 }
