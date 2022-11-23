@@ -5,11 +5,14 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.MapColor;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.outercloud.upgradeables.Hoppers.AbstractHopperEntity;
@@ -31,7 +34,7 @@ public class Upgradeables implements ModInitializer {
 	public static final String ID = "upgradeables";
 	public static final Logger LOGGER = LoggerFactory.getLogger("Upgradeables");
 
-	public static final WoodenHopper WOODEN_HOPPER = new WoodenHopper(FabricBlockSettings.of(Material.WOOD).strength(4.0f));
+	public static final WoodenHopper WOODEN_HOPPER = new WoodenHopper(FabricBlockSettings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
 	public static final BlockEntityType<AbstractHopperEntity> WOODEN_HOPPER_ENTITY = Registry.register(
 			Registry.BLOCK_ENTITY_TYPE,
 			new Identifier(ID, "wooden_hopper"),
@@ -39,7 +42,7 @@ public class Upgradeables implements ModInitializer {
 	);
 	public static final ScreenHandlerType<AbstractHopperScreenHandler> WOODEN_HOPPER_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(ID, "wooden_hopper"), AbstractHopperScreenHandler::new);
 
-	public static final StoneHopper STONE_HOPPER = new StoneHopper(FabricBlockSettings.of(Material.STONE).strength(4.0f));
+	public static final StoneHopper STONE_HOPPER = new StoneHopper(FabricBlockSettings.of(Material.STONE).requiresTool().strength(2.0F, 6.0F));
 	public static final BlockEntityType<StoneHopperEntity> STONE_HOPPER_ENTITY = Registry.register(
 			Registry.BLOCK_ENTITY_TYPE,
 			new Identifier(ID, "stone_hopper"),
@@ -47,7 +50,7 @@ public class Upgradeables implements ModInitializer {
 	);
 	public static final ScreenHandlerType<StoneHopperScreenHandler> STONE_HOPPER_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(ID, "stone_hopper"), StoneHopperScreenHandler::new);
 
-	public static final GoldHopper GOLD_HOPPER = new GoldHopper(FabricBlockSettings.of(Material.METAL).strength(4.0f));
+	public static final GoldHopper GOLD_HOPPER = new GoldHopper(FabricBlockSettings.of(Material.METAL, MapColor.GOLD).requiresTool().strength(3.0F, 6.0F).sounds(BlockSoundGroup.METAL));
 	public static final BlockEntityType<GoldHopperEntity> GOLD_HOPPER_ENTITY = Registry.register(
 			Registry.BLOCK_ENTITY_TYPE,
 			new Identifier(ID, "gold_hopper"),
@@ -55,7 +58,7 @@ public class Upgradeables implements ModInitializer {
 	);
 	public static final ScreenHandlerType<GoldHopperScreenHandler> GOLD_HOPPER_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(ID, "gold_hopper"), GoldHopperScreenHandler::new);
 
-	public static final DiamondHopper DIAMOND_HOPPER = new DiamondHopper(FabricBlockSettings.of(Material.METAL).strength(4.0f));
+	public static final DiamondHopper DIAMOND_HOPPER = new DiamondHopper(FabricBlockSettings.of(Material.METAL, MapColor.DIAMOND_BLUE).requiresTool().strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL));
 	public static final BlockEntityType<DiamondHopperEntity> DIAMOND_HOPPER_ENTITY = Registry.register(
 			Registry.BLOCK_ENTITY_TYPE,
 			new Identifier(ID, "diamond_hopper"),

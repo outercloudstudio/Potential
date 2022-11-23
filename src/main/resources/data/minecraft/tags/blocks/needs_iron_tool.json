@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "upgradeables:gold_hopper",
+    "upgradeables:diamond_hopper"
+  ]
+}
