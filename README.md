@@ -1,9 +1,6 @@
-# Fabric Example Mod
+# Upgradeables
 
-## Setup
+This mod adds tiers to utility blocks like furnaces, chests, and hoppers!
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
-
-## License
-
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+## Road Map
+Hoppers are currently implemented. Furnaces and chests are planned.
